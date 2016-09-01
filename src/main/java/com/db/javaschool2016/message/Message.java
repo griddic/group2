@@ -1,6 +1,7 @@
 package com.db.javaschool2016.message;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -41,5 +42,11 @@ public class Message implements Serializable {
      */
     public Date getDateTime() {
         return dateTime;
+    }
+
+    @Override
+    public String toString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm:ss dd.MM] ");
+        return dateFormat.format(dateTime) + message;
     }
 }

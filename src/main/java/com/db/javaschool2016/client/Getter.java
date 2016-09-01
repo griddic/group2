@@ -11,8 +11,10 @@ import java.net.Socket;
 public class Getter {
     private ObjectInputStream in;
     private Message message;
+    private ConsolePrinter printer;
 
-    public Getter() {
+    public Getter(ConsolePrinter printer) {
+        this.printer = printer;
         try {
             this.in = new ObjectInputStream(
                     new BufferedInputStream(
@@ -29,6 +31,7 @@ public class Getter {
             Object o = in.readObject();
             if (o instanceof Message) {
                 message = (Message) o;
+                printer.print(message.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -37,7 +40,7 @@ public class Getter {
         }
     }
 
-    public Message getMessage() {
-        return message;
-    }
+//    public Message getMessage() {
+//        return message;
+//    }
 }
