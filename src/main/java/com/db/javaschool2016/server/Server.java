@@ -41,7 +41,6 @@ public class Server {
 
                     while (true) {
                         Socket clientSocket = serverSocket.accept();
-                        System.out.println("Getted: " + clientSocket);
                         clientsList.add(new SingleClient(clientSocket, listenersPool, messagesQueue));
                     }
 
