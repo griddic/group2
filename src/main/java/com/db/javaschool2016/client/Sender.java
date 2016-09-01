@@ -12,6 +12,13 @@ public class Sender{
             );
     }
 
+    /**
+     * Send message to socket's OutputStream.
+     * @param message Message to send.
+     */
+
+    public void sendMessage(String message) {
+        try {
     public void sendMessage(String message) throws IOException{
             out.writeUTF(message);
             out.flush();

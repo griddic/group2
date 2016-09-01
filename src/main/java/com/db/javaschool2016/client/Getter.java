@@ -1,7 +1,6 @@
 package com.db.javaschool2016.client;
 
 
-import com.db.javaschool2016.message.Message;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -20,6 +19,18 @@ public class Getter{
             );
     }
 
+    /**
+     * Receive message from socket's InputStream.
+     * @return received message.
+     */
+    public String getInputMessage() {
+        String message = "";
+        try {
+            message = in.readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return message;
     public String getInputMessage() throws IOException{
             return in.readUTF();
     }

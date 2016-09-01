@@ -8,6 +8,11 @@ import java.util.regex.Pattern;
  */
 public class ConsoleInputParser {
 
+    /**
+     * Parse string with a command
+     * @param inString String from command line.
+     * @return proccessed string.
+     */
     public String parseString(String inString) {
         Pattern p = Pattern.compile("^/(\\w+)(.*)$");
         Matcher m = p.matcher(inString);

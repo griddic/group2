@@ -1,10 +1,5 @@
 package com.db.javaschool2016.server;
 
-import com.db.javaschool2016.message.Message;
-import com.sun.org.apache.xpath.internal.SourceTree;
-
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,12 +7,15 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Queue;
 import java.util.concurrent.*;
 
 public class Server {
     private Collection<SingleClient> clientsList = Collections.synchronizedList(new ArrayList<SingleClient>());
     private ExecutorService listenersPool = Executors.newCachedThreadPool();
-    private LinkedBlockingQueue<String> messagesQueue = new LinkedBlockingQueue<>();
+
+    /** thread-safe: http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/BlockingQueue.html */
+    private BlockingQueue<String> messagesQueue = new LinkedBlockingQueue<>();
 
     private void mainLoop() {
         ExecutorService clientsAccepter = Executors.newSingleThreadExecutor();
@@ -64,7 +62,7 @@ public class Server {
                 try {
                     message = messagesQueue.take();
                     for (SingleClient client : clientsList) {
-                        Executors.newSingleThreadExecutor().execute(() -> client.send(message));
+                        new Thread(() -> client.send(message)).start();
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

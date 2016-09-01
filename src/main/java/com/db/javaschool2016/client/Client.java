@@ -5,6 +5,9 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ *
+ */
 public class Client {
     private Socket socket;
     private Sender sender;
