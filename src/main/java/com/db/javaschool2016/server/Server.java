@@ -65,8 +65,7 @@ public class Server {
                 try {
                     message = messagesQueue.take();
                     for (SingleClient client : clientsList) {
-                        //Executors.newSingleThreadExecutor().execute(() -> client.send(message));
-                        client.send(message);
+                        Executors.newSingleThreadExecutor().execute(() -> client.send(message));
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
