@@ -1,12 +1,14 @@
 package com.db.javaschool2016.message;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Class sending through TCP/IP
  */
 public class Message implements Serializable {
     private String message;
+    private Date dateTime;
 
     /**
      * Constructor for sending Message
@@ -22,5 +24,21 @@ public class Message implements Serializable {
      */
     public String getMessage() {
         return message;
+    }
+
+    /**
+     * setter of dateTime of message
+     * @param dateTime Date
+     */
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    /**
+     * getter of dateTime of message
+     * @return Date of message
+     */
+    public Date getDateTime() {
+        return dateTime;
     }
 }
