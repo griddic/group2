@@ -1,6 +1,5 @@
 package com.db.javaschool2016.client;
 
-import com.db.javaschool2016.message.Message;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,9 +19,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetterClassTest {
-
-    @Mock
-    Message message = mock(Message.class);
 
     @Mock
     DataInputStream in  = mock(DataInputStream.class);
