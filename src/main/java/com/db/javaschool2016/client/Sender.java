@@ -17,8 +17,6 @@ public class Sender{
      * @param message Message to send.
      */
 
-    public void sendMessage(String message) {
-        try {
     public void sendMessage(String message) throws IOException{
             out.writeUTF(message);
             out.flush();
