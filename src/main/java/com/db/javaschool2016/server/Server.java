@@ -7,12 +7,15 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Queue;
 import java.util.concurrent.*;
 
 public class Server {
     private Collection<SingleClient> clientsList = Collections.synchronizedList(new ArrayList<SingleClient>());
     private ExecutorService listenersPool = Executors.newCachedThreadPool();
-    private LinkedBlockingQueue<String> messagesQueue = new LinkedBlockingQueue<>();
+
+    /** thread-safe: http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/BlockingQueue.html */
+    private BlockingQueue<String> messagesQueue = new LinkedBlockingQueue<>();
 
     private void mainLoop() {
         ExecutorService clientsAccepter = Executors.newSingleThreadExecutor();

@@ -1,4 +1,4 @@
-package com.acme.edu;
+package com.db.javaschool2016.server;
 
 import java.io.*;
 import java.net.Socket;
