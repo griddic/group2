@@ -15,19 +15,14 @@ class ExitClientException extends Exception {
  * Parser for input of user
  */
 public class ConsoleInputParser {
-    public ConsoleInputParser() {
-        System.out.println("parser");
-    }
 
-    public Message parseString(String inString) throws ExitClientException {
+    public String parseString(String inString) throws ExitClientException {
         Pattern p = Pattern.compile("^/(\\w+)(.*)$");
         Matcher m = p.matcher(inString);
         if(m.matches()) {
             switch (m.group(1)) {
                 case "snd":
-                    return new Message(m.group(2));
-                case "exit":
-                    throw new ExitClientException();
+                    return m.group(2);
                 default:
                     System.out.println("[WRONG COMMAND] Inapplicable command.");
             }
@@ -37,14 +32,5 @@ public class ConsoleInputParser {
                             "[WRONG INPUT] Your message should be separated from command with space.");
         }
         return null;
-    }
-
-    public static void main(String[] args) {
-        ConsoleInputParser c = new ConsoleInputParser();
-        try {
-            Message m = c.parseString("/snd 1");
-        } catch (ExitClientException e) {
-            e.printStackTrace();
-        }
     }
 }

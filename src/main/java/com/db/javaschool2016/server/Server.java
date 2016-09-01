@@ -42,6 +42,8 @@ public class Server {
 
                     while (true) {
                         Socket clientSocket = serverSocket.accept();
+                        clientSocket.getOutputStream();
+                        System.out.println(clientSocket.getInetAddress());
 
                         clientsList.add(new SingleClient(clientSocket, listenersPool, messagesQueue));
                     }

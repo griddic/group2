@@ -4,7 +4,6 @@ import com.db.javaschool2016.message.Message;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Client {
     private Socket socket;
@@ -22,12 +21,11 @@ public class Client {
     }
 
     public void process() {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        DataInputStream reader = new DataInputStream(new BufferedInputStream(System.in));
         try {
             while (true) {
-                String n = reader.readLine();
-                System.out.println(reader);
-                Message message = consoleInputParser.parseString(n);
+                String n = reader.readUTF();
+                String message = consoleInputParser.parseString(n);
                 if(message != null) {
 
                 }
@@ -37,19 +35,16 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static void main(String[] args) throws IOException {
 
-        Getter getter = new Getter(new Socket("localhost", 1234));
         Client s = null;
         try {
             s = new Client(new ConsoleInputParser());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("123");
         s.process();
     }
 }

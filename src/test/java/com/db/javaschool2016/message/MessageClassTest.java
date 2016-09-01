@@ -6,7 +6,7 @@ import java.util.Date;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class MessageTest {
+public class MessageClassTest {
     @Test
     public void shouldCreateMessage () {
         Message m = new Message("abc");
