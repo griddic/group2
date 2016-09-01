@@ -32,7 +32,7 @@ public class GetterClassTest {
 
 
     @Test
-    public void shouldSaveMessage() {
+    public void shouldGetTheMessageFromConsole() {
         //region Given
         Getter getter = mock(Getter.class);
         //endregion

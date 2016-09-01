@@ -21,7 +21,7 @@ public class SenderClassTest {
     ObjectOutputStream out = mock(ObjectOutputStream.class);
 
     @Test
-    public void shouldSendMessage() throws IOException {
+    public void shouldSendTheMessageFromConsole() throws IOException {
         //region Given
         Message message = new Message("");
         Sender sender = mock(Sender.class);

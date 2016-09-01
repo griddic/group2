@@ -24,6 +24,10 @@ public class Getter {
         }
     }
 
+    /**
+     * Receive message from socket's InputStream.
+     * @return received message.
+     */
     public String getInputMessage() {
         String message = "";
         try {

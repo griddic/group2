@@ -16,6 +16,11 @@ public class Sender{
         }
     }
 
+    /**
+     * Send message to socket's OutputStream.
+     * @param message Message to send.
+     */
+
     public void sendMessage(String message) {
         try {
             out.writeUTF(message);
