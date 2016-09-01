@@ -1,22 +1,14 @@
 package com.db.javaschool2016.client;
 
-import com.db.javaschool2016.message.Message;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-class ExitClientException extends Exception {
-    public ExitClientException() {
-        super();
-    }
-}
 
 /**
  * Parser for input of user
  */
 public class ConsoleInputParser {
 
-    public String parseString(String inString) throws ExitClientException {
+    public String parseString(String inString) {
         Pattern p = Pattern.compile("^/(\\w+)(.*)$");
         Matcher m = p.matcher(inString);
         if(m.matches()) {

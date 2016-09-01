@@ -11,7 +11,6 @@ import java.net.Socket;
 
 public class Getter {
     private DataInputStream in;
-    private String message;
 
     public Getter(Socket socket) {
         try {
@@ -27,12 +26,14 @@ public class Getter {
         }
     }
 
-    public void saveInputMessage() {
+    public String getInputMessage() {
+        String message = "";
         try {
             message = in.readUTF();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return message;
     }
 
 //    public Message getMessage() {

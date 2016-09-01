@@ -1,9 +1,9 @@
 package com.db.javaschool2016.client;
 
-import com.db.javaschool2016.message.Message;
-
 import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Client {
     private Socket socket;
@@ -20,20 +20,40 @@ public class Client {
 
     }
 
-    public void process() {
-        DataInputStream reader = new DataInputStream(new BufferedInputStream(System.in));
-        try {
-            while (true) {
-                String n = reader.readUTF();
-                String message = consoleInputParser.parseString(n);
-                if(message != null) {
+    public void process () {
+        ExecutorService consoleListenerAndSender = Executors.newSingleThreadExecutor();
+        consoleListenerAndSender.execute(new ConsoleListenerAndSender());
 
+        ExecutorService serverListenerAndConsoleWriter = Executors.newSingleThreadExecutor();
+        serverListenerAndConsoleWriter.execute(new ServerListenerAndConsoleWriter());
+    }
+
+    private class ConsoleListenerAndSender implements Runnable {
+
+        @Override
+        public void run() {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            try {
+                while (true) {
+                    String n = reader.readLine();
+                    String message = consoleInputParser.parseString(n);
+                    if(message != null) {
+                        sender.sendMessage(message);
+                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (ExitClientException e) {
-            System.out.println("Exiting....");
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+    }
+
+    private class ServerListenerAndConsoleWriter implements Runnable {
+
+        @Override
+        public void run() {
+            while (true) {
+                System.out.println(getter.getInputMessage());
+            }
         }
     }
 
