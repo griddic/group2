@@ -11,7 +11,7 @@ public class ConsoleInputParser {
     /**
      * Parse string with a command
      * @param inString String from command line.
-     * @return proccessed string.
+     * @return processed string.
      */
     public String parseString(String inString) {
         Pattern p = Pattern.compile("^/(\\w+)(.*)$");
