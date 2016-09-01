@@ -11,21 +11,20 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Collections;
+import java.util.concurrent.*;
 
 public class Server {
-    private Collection<SingleClient> clientsList = new CopyOnWriteArrayList<SingleClient>();
+    private Collection<SingleClient> clientsList = Collections.synchronizedList(new ArrayList<SingleClient>());
     private ExecutorService listenersPool = Executors.newCachedThreadPool();
-    private BlockingQueue<Message> messagesQueue;
+    private LinkedBlockingQueue<String> messagesQueue = new LinkedBlockingQueue<>();
 
     private void mainLoop() {
         ExecutorService clientsAccepter = Executors.newSingleThreadExecutor();
         clientsAccepter.execute(new NewClientAcceptor());
 
         ExecutorService messagesProcessing = Executors.newSingleThreadExecutor();
+        messagesProcessing.execute(new MessagesProcessor());
 
 
     }
@@ -42,9 +41,7 @@ public class Server {
 
                     while (true) {
                         Socket clientSocket = serverSocket.accept();
-                        clientSocket.getOutputStream();
-                        System.out.println(clientSocket.getInetAddress());
-
+                        System.out.println("Getted: " + clientSocket);
                         clientsList.add(new SingleClient(clientSocket, listenersPool, messagesQueue));
                     }
 
@@ -64,10 +61,15 @@ public class Server {
         @Override
         public void run() {
             while (true) {
-                if (messagesQueue.isEmpty()) continue;
-                Message message = messagesQueue.remove();
-                for (SingleClient client: clientsList) {
-                    client.send(message);
+                String message;
+                try {
+                    message = messagesQueue.take();
+                    for (SingleClient client : clientsList) {
+                        //Executors.newSingleThreadExecutor().execute(() -> client.send(message));
+                        client.send(message);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
 
             }
