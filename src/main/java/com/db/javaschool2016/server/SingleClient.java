@@ -53,7 +53,6 @@ public class SingleClient {
                 while (!Thread.interrupted()) {
                     if (!socket.isConnected()) return;
                     String message = inputStream.readUTF();
-                    System.out.println(message);
                     queue.put(Formatter.format(message));
                 }
             } catch (IOException e) {
