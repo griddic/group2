@@ -13,14 +13,15 @@ public class Getter {
     private Message message;
     private ConsolePrinter printer;
 
-    public Getter(ConsolePrinter printer) {
+    public Getter(ConsolePrinter printer, Socket socket) {
         this.printer = printer;
         try {
             this.in = new ObjectInputStream(
                     new BufferedInputStream(
-                            new Socket("localhost", 1234).getInputStream()
+                            socket.getInputStream()
                     )
             );
+            System.out.println("getter");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -20,6 +20,7 @@ public class ConsoleInputParser {
 
     public ConsoleInputParser(ConsolePrinter printer) {
         this.printer = printer;
+        System.out.println("parder");
     }
 
     public Message parseString(String inString) throws ExitClientException {

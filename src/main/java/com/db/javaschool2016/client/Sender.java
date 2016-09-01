@@ -8,13 +8,14 @@ import java.net.Socket;
 public class Sender {
     private ObjectOutputStream out;
 
-    public Sender() {
+    public Sender(Socket socket) {
         try {
             this.out = new ObjectOutputStream(
                     new BufferedOutputStream(
-                            new Socket("localhost", 1234).getOutputStream()
+                            socket.getOutputStream()
                     )
             );
+            System.out.println("sender");
         } catch (IOException e) {
             e.printStackTrace();
         }
