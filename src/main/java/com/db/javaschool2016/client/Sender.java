@@ -16,4 +16,8 @@ public class Sender{
             out.writeUTF(message);
             out.flush();
     }
+
+    public void close() throws IOException {
+        out.close();
+    }
 }

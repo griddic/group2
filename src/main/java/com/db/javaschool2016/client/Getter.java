@@ -23,4 +23,8 @@ public class Getter{
     public String getInputMessage() throws IOException{
             return in.readUTF();
     }
+
+    public void close() throws IOException {
+        in.close();
+    }
 }

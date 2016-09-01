@@ -10,6 +10,9 @@ public class Client {
     private Sender sender;
     private Getter getter;
     private ConsoleInputParser consoleInputParser;
+    private ExecutorService consoleListenerAndSender = Executors.newSingleThreadExecutor();
+    private ExecutorService serverListenerAndConsoleWriter = Executors.newSingleThreadExecutor();
+    private boolean status;
 
 
     public Client(ConsoleInputParser consoleInputParser) throws IOException {
@@ -17,15 +20,29 @@ public class Client {
         this.getter = new Getter(socket);
         this.sender = new Sender(socket);
         this.consoleInputParser = consoleInputParser;
-
+        this.status = false;
     }
 
     public void process () {
-        ExecutorService consoleListenerAndSender = Executors.newSingleThreadExecutor();
         consoleListenerAndSender.execute(new ConsoleListenerAndSender());
-
-        ExecutorService serverListenerAndConsoleWriter = Executors.newSingleThreadExecutor();
         serverListenerAndConsoleWriter.execute(new ServerListenerAndConsoleWriter());
+    }
+
+    public void close()  {
+        this.consoleListenerAndSender.shutdownNow();
+        this.serverListenerAndConsoleWriter.shutdownNow();
+        try {
+            this.getter.close();
+            this.sender.close();
+            this.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.status = true;
+    }
+
+    public boolean getStatus() {
+        return status;
     }
 
     private class ConsoleListenerAndSender implements Runnable {
@@ -42,7 +59,8 @@ public class Client {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("server is down");
+                close();
             }
         }
     }
@@ -51,25 +69,33 @@ public class Client {
 
         @Override
         public void run() {
-            while (true) {
-                try {
+            try {
+                while (true) {
                     System.out.println(getter.getInputMessage());
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
+            } catch (IOException e) {
+                System.out.println("server is down");
+                close();
             }
         }
     }
 
     public static void main(String[] args) {
 
-        Client s = null;
+        Client client = null;
         try {
-            s = new Client(new ConsoleInputParser());
+            client = new Client(new ConsoleInputParser());
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
-        s.process();
+
+        client.process();
+
+        while (true) {
+            if (client.getStatus()) {
+                System.exit(0);
+            }
+        }
     }
 }
