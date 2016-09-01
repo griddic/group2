@@ -14,13 +14,11 @@ public class Getter {
 
     public Getter(Socket socket) {
         try {
-//            System.out.println(socket.getInputStream());
             this.in = new DataInputStream(
                     new BufferedInputStream(
                             socket.getInputStream()
                     )
             );
-            System.out.println("getter");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -35,8 +33,4 @@ public class Getter {
         }
         return message;
     }
-
-//    public Message getMessage() {
-//        return message;
-//    }
 }
