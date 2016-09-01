@@ -1,10 +1,5 @@
 package com.db.javaschool2016.server;
 
-import com.db.javaschool2016.message.Message;
-import com.sun.org.apache.xpath.internal.SourceTree;
-
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -64,7 +59,7 @@ public class Server {
                 try {
                     message = messagesQueue.take();
                     for (SingleClient client : clientsList) {
-                        Executors.newSingleThreadExecutor().execute(() -> client.send(message));
+                        new Thread(() -> client.send(message)).start();
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
