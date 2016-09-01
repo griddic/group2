@@ -7,6 +7,7 @@ import java.util.Date;
  * Class sending through TCP/IP
  */
 public class Message implements Serializable {
+    private static final long serialVersionUID = 1234567890098765L;
     private String message;
     private Date dateTime;
 
