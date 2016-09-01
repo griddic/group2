@@ -14,25 +14,27 @@ import java.io.ObjectOutputStream;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class SenderClassTest {
 
-//    @Mock
-//    ObjectOutputStream out = mock(ObjectOutputStream.class);
-//
-//    @InjectMocks
-//    //Sender sender =  new Sender();
-//
-//    @Ignore
-//    @Test
-//    public void shouldSendMessage() throws IOException {
-//        Message message = new Message("");
-//        sender.sendMessage(message);
-//
-//        verify(out).writeObject(message);
-//    }
+    @Mock
+    ObjectOutputStream out = mock(ObjectOutputStream.class);
 
+    @Test
+    public void shouldSendMessage() throws IOException {
+        //region Given
+        Message message = new Message("");
+        Sender sender = mock(Sender.class);
+        //endregion
+
+        //region When
+        sender.sendMessage("test message");
+        //endregion
+
+        //region then
+        verify(sender).sendMessage("test message");
+        //endregion
+    }
 
 }
 
