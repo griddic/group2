@@ -6,7 +6,9 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by Java_5 on 01.09.2016.
@@ -16,50 +18,47 @@ public class SingleClient {
     private final ExecutorService listenersPool;
 
 
-    public SingleClient(Socket socket, ExecutorService listenersPool, BlockingQueue<Message> queue) {
+    public SingleClient(Socket socket, ExecutorService listenersPool, LinkedBlockingQueue<String> queue) {
         this.socket = socket;
         this.listenersPool = listenersPool;
         listenersPool.execute(new MessageListener(queue));
     }
 
-    public void send(Message message) {
+    public void send(String message) {
+        if (!socket.isConnected()) return;
         try {
-            ObjectOutputStream out = new ObjectOutputStream(
-                    new BufferedOutputStream(
-                            socket.getOutputStream()));
-            out.writeObject(message);
+            DataOutputStream out = new DataOutputStream(
+                            socket.getOutputStream());
+            out.writeUTF(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     class MessageListener implements Runnable{
-        private BlockingQueue<Message> queue;
+        private LinkedBlockingQueue<String> queue;
 
-        public MessageListener(BlockingQueue<Message> queue) {
+        public MessageListener(LinkedBlockingQueue<String> queue) {
             this.queue = queue;
         }
         @Override
         public void run() {
-            ObjectInputStream inputStream;
-            try {
-                inputStream = new ObjectInputStream(
+            //DataInputStream inputStream;
+            try (DataInputStream inputStream =
+                        new DataInputStream(
                         new BufferedInputStream(
-                                socket.getInputStream()
-                        )
-                );
-                while (true) {
+                        socket.getInputStream())))
+            {
 
-                    Object o = inputStream.readObject();
-                    if (o instanceof Message) {
-                        Message m = (Message)o;
-                        queue.add(m);
-                    }
-
+                while (!Thread.interrupted()) {
+                    if (!socket.isConnected()) return;
+                    String message = inputStream.readUTF();
+                    System.out.println(message);
+                    queue.put(message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
