@@ -13,4 +13,12 @@ public class Message {
     public Message(String message) {
         this.message = message;
     }
+
+    /**
+     * Getter for message string
+     * @return message String
+     */
+    public String getMessage() {
+        return message;
+    }
 }
