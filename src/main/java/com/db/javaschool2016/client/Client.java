@@ -40,8 +40,9 @@ public class Client {
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
+        Getter getter = new Getter(new Socket("localhost", 1234));
         Client s = null;
         try {
             s = new Client(new ConsoleInputParser());

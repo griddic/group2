@@ -10,11 +10,7 @@ public class Sender {
 
     public Sender(Socket socket) {
         try {
-            this.out = new ObjectOutputStream(
-                    new BufferedOutputStream(
-                            socket.getOutputStream()
-                    )
-            );
+            this.out = new ObjectOutputStream(socket.getOutputStream());
             System.out.println("sender");
         } catch (IOException e) {
             e.printStackTrace();
