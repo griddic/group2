@@ -6,9 +6,9 @@ import com.db.javaschool2016.message.Message;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class WrongConsoleInputException extends Exception {
-    public WrongConsoleInputException(String s) {
-        super(s);
+class ExitClientException extends Exception {
+    public ExitClientException() {
+        super();
     }
 }
 
@@ -22,7 +22,7 @@ public class ConsoleInputParser {
         this.printer = printer;
     }
 
-    public Message parseString(String inString) {
+    public Message parseString(String inString) throws ExitClientException {
         ConsoleCommands cmd;
 
         Pattern p = Pattern.compile("^/(\\w+)\\s(.*)$");
@@ -31,12 +31,12 @@ public class ConsoleInputParser {
             switch (m.group(1)) {
                 case "/snd":
                     cmd = ConsoleCommands.SEND;
-                    break;
+                    return new Message(m.group(2));
                 case "/exit":
-                    cmd = ConsoleCommands.EXIT;
-                    break;
+                    throw new ExitClientException();
                 case "/rcv":
                     cmd = ConsoleCommands.RECEIVE;
+                    break;
                 default:
                     printer.print("[WRONG COMMAND] Inapplicable command.");
             }
@@ -45,11 +45,15 @@ public class ConsoleInputParser {
             printer.print("[WRONG INPUT] Your command contains a mistake." + System.lineSeparator() +
                             "[WRONG INPUT] Your message should be separated from command with space.");
         }
-        return new Message("123");
+        return null;
     }
 
     public static void main(String[] args) {
         ConsoleInputParser c = new ConsoleInputParser(new ConsolePrinter());
-        Message m = c.parseString("/exit");
+        try {
+            Message m = c.parseString("/exit");
+        } catch (ExitClientException e) {
+            e.printStackTrace();
+        }
     }
 }
