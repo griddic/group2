@@ -24,7 +24,7 @@ public class Getter {
         }
     }
 
-    public void getMessage() {
+    public void saveInputMessage() {
         try {
             Object o = in.readObject();
             if (o instanceof Message) {
@@ -37,7 +37,7 @@ public class Getter {
         }
     }
 
-    public void writeMessage() {
-        System.out.println(this.message.getMessage());
+    public Message getMessage() {
+        return message;
     }
 }

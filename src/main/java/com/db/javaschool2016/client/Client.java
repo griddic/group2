@@ -7,5 +7,7 @@ public class Client {
     public Client(Sender sender, Getter getter) {
         this.sender = sender;
         this.getter = getter;
+
+
     }
 }
