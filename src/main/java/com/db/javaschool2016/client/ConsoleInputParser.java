@@ -1,6 +1,5 @@
 package com.db.javaschool2016.client;
 
-import com.db.javaschool2016.message.ConsoleCommands;
 import com.db.javaschool2016.message.Message;
 
 import java.util.regex.Matcher;
@@ -16,43 +15,34 @@ class ExitClientException extends Exception {
  * Parser for input of user
  */
 public class ConsoleInputParser {
-    private ConsolePrinter printer;
-
-    public ConsoleInputParser(ConsolePrinter printer) {
-        this.printer = printer;
-        System.out.println("parder");
+    public ConsoleInputParser() {
+        System.out.println("parser");
     }
 
     public Message parseString(String inString) throws ExitClientException {
-        ConsoleCommands cmd;
-
-        Pattern p = Pattern.compile("^/(\\w+)\\s(.*)$");
+        Pattern p = Pattern.compile("^/(\\w+)(.*)$");
         Matcher m = p.matcher(inString);
         if(m.matches()) {
             switch (m.group(1)) {
-                case "/snd":
-                    cmd = ConsoleCommands.SEND;
+                case "snd":
                     return new Message(m.group(2));
-                case "/exit":
+                case "exit":
                     throw new ExitClientException();
-                case "/rcv":
-                    cmd = ConsoleCommands.RECEIVE;
-                    break;
                 default:
-                    printer.print("[WRONG COMMAND] Inapplicable command.");
+                    System.out.println("[WRONG COMMAND] Inapplicable command.");
             }
         }
         else {
-            printer.print("[WRONG INPUT] Your command contains a mistake." + System.lineSeparator() +
+            System.out.println("[WRONG INPUT] Your command contains a mistake." + System.lineSeparator() +
                             "[WRONG INPUT] Your message should be separated from command with space.");
         }
         return null;
     }
 
     public static void main(String[] args) {
-        ConsoleInputParser c = new ConsoleInputParser(new ConsolePrinter());
+        ConsoleInputParser c = new ConsoleInputParser();
         try {
-            Message m = c.parseString("/exit");
+            Message m = c.parseString("/snd 1");
         } catch (ExitClientException e) {
             e.printStackTrace();
         }

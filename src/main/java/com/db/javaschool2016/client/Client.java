@@ -11,14 +11,12 @@ public class Client {
     private Sender sender;
     private Getter getter;
     private ConsoleInputParser consoleInputParser;
-    private ConsolePrinter printer;
 
 
-    public Client(ConsoleInputParser consoleInputParser, ConsolePrinter printer) throws IOException {
+    public Client(ConsoleInputParser consoleInputParser) throws IOException {
         socket = new Socket("localhost", 1234);
-        this.printer = printer;
+        this.getter = new Getter(socket);
         this.sender = new Sender(socket);
-        this.getter = new Getter(printer, socket);
         this.consoleInputParser = consoleInputParser;
 
     }
@@ -35,7 +33,7 @@ public class Client {
                 }
             }
         } catch (ExitClientException e) {
-            printer.print("Exiting....");
+            System.out.println("Exiting....");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -44,10 +42,9 @@ public class Client {
 
     public static void main(String[] args) {
 
-        ConsolePrinter printWriter = new ConsolePrinter();
         Client s = null;
         try {
-            s = new Client(new ConsoleInputParser(printWriter), printWriter);
+            s = new Client(new ConsoleInputParser());
         } catch (IOException e) {
             e.printStackTrace();
         }
