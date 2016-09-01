@@ -1,8 +1,5 @@
 package com.db.javaschool2016.client;
 
-
-import com.db.javaschool2016.message.Message;
-
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
