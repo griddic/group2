@@ -6,22 +6,14 @@ import java.net.Socket;
 public class Sender{
     private DataOutputStream out;
 
-    public Sender(Socket socket) {
-        try {
+    public Sender(Socket socket) throws IOException{
             this.out = new DataOutputStream(
                             socket.getOutputStream()
             );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    public void sendMessage(String message) {
-        try {
+    public void sendMessage(String message) throws IOException{
             out.writeUTF(message);
             out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

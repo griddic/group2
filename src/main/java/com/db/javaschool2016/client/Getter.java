@@ -9,28 +9,18 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
-public class Getter {
+public class Getter{
     private DataInputStream in;
 
-    public Getter(Socket socket) {
-        try {
+    public Getter(Socket socket) throws IOException {
             this.in = new DataInputStream(
                     new BufferedInputStream(
                             socket.getInputStream()
                     )
             );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    public String getInputMessage() {
-        String message = "";
-        try {
-            message = in.readUTF();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return message;
+    public String getInputMessage() throws IOException{
+            return in.readUTF();
     }
 }

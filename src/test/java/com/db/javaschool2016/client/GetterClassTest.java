@@ -32,7 +32,7 @@ public class GetterClassTest {
 
 
     @Test
-    public void shouldSaveMessage() {
+    public void shouldSaveMessage() throws IOException {
         //region Given
         Getter getter = mock(Getter.class);
         //endregion

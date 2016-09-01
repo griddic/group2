@@ -52,18 +52,23 @@ public class Client {
         @Override
         public void run() {
             while (true) {
-                System.out.println(getter.getInputMessage());
+                try {
+                    System.out.println(getter.getInputMessage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         Client s = null;
         try {
             s = new Client(new ConsoleInputParser());
         } catch (IOException e) {
             e.printStackTrace();
+            System.exit(1);
         }
         s.process();
     }
