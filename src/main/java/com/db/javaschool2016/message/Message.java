@@ -1,9 +1,11 @@
 package com.db.javaschool2016.message;
 
+import java.io.Serializable;
+
 /**
  * Class sending through TCP/IP
  */
-public class Message {
+public class Message implements Serializable {
     private String message;
 
     /**
