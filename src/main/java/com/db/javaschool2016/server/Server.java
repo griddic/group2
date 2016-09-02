@@ -1,6 +1,6 @@
 package com.db.javaschool2016.server;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Queue;
 import java.util.concurrent.*;
+import org.apache.commons.io.IOUtils;
 
 public class Server {
     private Collection<SingleClient> clientsList = Collections.synchronizedList(new ArrayList<SingleClient>());
@@ -84,10 +85,7 @@ class NewClientAcceptor implements Runnable {
  * !!!! Single thread function !!!!
  */
 class MessagesProcessor implements Runnable {
-    public String getHistory() {
-        return history.toString();
-    }
-
+    private String historyFile = "history.txt";
     private StringBuilder history = new StringBuilder("");
     private BlockingQueue<String> messagesQueue;
     private Collection<SingleClient> clientsList;
@@ -95,22 +93,67 @@ class MessagesProcessor implements Runnable {
     public MessagesProcessor(BlockingQueue<String> messagesQueue, Collection<SingleClient> clientsList) {
         this.messagesQueue = messagesQueue;
         this.clientsList = clientsList;
+        createHistoryFileIfNotExist();
+        restoreHistFromFile();
+    }
+
+    private void createHistoryFileIfNotExist() {
+        File yourFile = new File(this.historyFile);
+        try {
+            yourFile.createNewFile(); // if file already exists will do nothing
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void run() {
-        while (true) {
-            String message;
-            try {
-                message = messagesQueue.take();
-                history.append(message + System.lineSeparator());
-                for (SingleClient client : clientsList) {
-                    new Thread(() -> client.send(message)).start();
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
+        try {
+            try (OutputStreamWriter historyStream = new OutputStreamWriter(
+                    new BufferedOutputStream(
+                            new FileOutputStream(this.historyFile, true)
+                    )
+            )) {
+                while (true) {
+                    String message;
+                    try {
+                        message = messagesQueue.take();
+                        new Thread(() -> {
+                            try {
+                                historyStream.write(message + System.lineSeparator());
+                                historyStream.flush();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }).start();
+                        history.append(message + System.lineSeparator());
+                        for (SingleClient client : clientsList) {
+                            new Thread(() -> client.send(message)).start();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public String getHistory() {
+        return history.toString();
+    }
+    private void restoreHistFromFile() {
+        try (FileInputStream fisTargetFile = new FileInputStream(new File(this.historyFile));) {
+            String targetFileStr = IOUtils.toString(fisTargetFile, "UTF-8");
+            this.history = new StringBuilder(targetFileStr);
+        } catch (FileNotFoundException e) {
+            System.out.println("History will not be overloaded, no history file.");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("History will not be overloaded, history file seems to be broken.");
+            e.printStackTrace();
         }
     }
 }
