@@ -24,7 +24,7 @@ public class ConsoleInputParser {
             switch (command) {
                 case "/snd":
                     if (message != null && message.length() > 1 && message.length() <= 151) {
-                        return message;
+                        return message.trim();
                     }
                     else {
                         System.out.println("[WRONG INPUT] message shouldn't be empty and more than 150 characters");

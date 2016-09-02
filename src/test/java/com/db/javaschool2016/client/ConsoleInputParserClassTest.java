@@ -72,11 +72,11 @@ public class ConsoleInputParserClassTest {
         //endregion
 
         //region When
-        String parsedString = consoleInputParser.parseString(SEND_COMMAND + "Hello!");
+        String parsedString = consoleInputParser.parseString(SEND_COMMAND + " Hello!");
         //endregion
 
         //region Then
-        assertThat(parsedString).contains("Hello!");
+        assertThat(parsedString).isEqualTo("Hello!");
         //endregion
     }
 
