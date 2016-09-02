@@ -2,11 +2,9 @@ package com.db.javaschool2016.server;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
 
 /**
- * Created by Java_5 on 01.09.2016.
+ * Instance responsible communication with a single client
  */
 public class SingleClient {
     public Socket getSocket() {
@@ -19,10 +17,9 @@ public class SingleClient {
 
     private final Socket socket;
     private final Server server;
-    //private final ExecutorService listenersPool;
 
 
-    public SingleClient(Socket socket, Server server) {//} ExecutorService listenersPool, BlockingQueue<String> queue) {
+    public SingleClient(Socket socket, Server server) {
         this.socket = socket;
         this.server = server;
     }
@@ -43,7 +40,6 @@ public class SingleClient {
 }
 
 class MessageListener implements Runnable{
-    //private BlockingQueue<String> queue;
     private SingleClient client;
 
     public MessageListener(SingleClient client) {
@@ -51,7 +47,6 @@ class MessageListener implements Runnable{
     }
     @Override
     public void run() {
-        //DataInputStream inputStream;
         try (DataInputStream inputStream =
                      new DataInputStream(
                              new BufferedInputStream(

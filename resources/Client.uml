@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.db.javaschool2016.client.Client</OriginalElement>
+  <nodes>
+    <node x="113.5" y="-25.166666666666686">com.db.javaschool2016.server.Formatter</node>
+    <node x="242.66666666666657" y="-109.83333333333331">com.db.javaschool2016.server.NewClientAcceptor</node>
+    <node x="250.83333333333337" y="8.166666666666686">com.db.javaschool2016.server.MessageListener</node>
+    <node x="222.66666666666669" y="-264.16666666666663">com.db.javaschool2016.server.MessagesProcessor</node>
+    <node x="-280.0" y="-158.0">com.db.javaschool2016.client.Sender</node>
+    <node x="-161.0" y="-261.0">com.db.javaschool2016.client.ConsoleInputParser</node>
+    <node x="114.0" y="-162.0">com.db.javaschool2016.server.Server</node>
+    <node x="418.0" y="-169.0">com.db.javaschool2016.server.SingleClient</node>
+    <node x="-122.0" y="-79.0">com.db.javaschool2016.client.Getter</node>
+    <node x="-122.0" y="-159.0">com.db.javaschool2016.client.Client</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.db.javaschool2016.client.Client" target="com.db.javaschool2016.client.ConsoleInputParser">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.db.javaschool2016.server.MessageListener" target="com.db.javaschool2016.server.SingleClient">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.db.javaschool2016.server.Server" target="com.db.javaschool2016.server.NewClientAcceptor">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.db.javaschool2016.server.Server" target="com.db.javaschool2016.server.MessageListener">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.db.javaschool2016.client.Client" target="com.db.javaschool2016.client.Sender">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.db.javaschool2016.server.MessagesProcessor" target="com.db.javaschool2016.server.SingleClient">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.db.javaschool2016.server.SingleClient" target="com.db.javaschool2016.server.Server">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.db.javaschool2016.client.Client" target="com.db.javaschool2016.client.Getter">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.db.javaschool2016.server.Server" target="com.db.javaschool2016.server.SingleClient">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.db.javaschool2016.server.NewClientAcceptor" target="com.db.javaschool2016.server.SingleClient">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.db.javaschool2016.server.NewClientAcceptor" target="com.db.javaschool2016.server.Server">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.db.javaschool2016.server.Server" target="com.db.javaschool2016.server.MessagesProcessor">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.2000000000000002" x="13.499999999999943" y="-206.08333333333331" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

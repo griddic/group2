@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
  * Parser for input of user
  */
 public class ConsoleInputParser {
+    private final String WRONG_INPUT = "[WRONG INPUT] message shouldn't be empty and more than 150 characters";
 
     /**
      * Parse string with a command
@@ -24,10 +25,15 @@ public class ConsoleInputParser {
             switch (command) {
                 case "/snd":
                     if (message != null && message.length() > 1 && message.length() <= 151) {
-                        return message.trim();
+                        if(message.trim().length() > 0) {
+                            return message.trim();
+                        }
+                        else {
+                            System.out.println(WRONG_INPUT);
+                        }
                     }
                     else {
-                        System.out.println("[WRONG INPUT] message shouldn't be empty and more than 150 characters");
+                        System.out.println(WRONG_INPUT);
                     }
                     break;
                 case "/hist":

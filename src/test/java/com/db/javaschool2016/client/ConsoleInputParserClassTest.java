@@ -9,7 +9,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import static org.fest.assertions.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 public class ConsoleInputParserClassTest {
     private final String WRONG_COMMAND_ALERT = "[WRONG COMMAND] Inapplicable command.";

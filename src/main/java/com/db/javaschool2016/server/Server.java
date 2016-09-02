@@ -4,16 +4,21 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Queue;
 import java.util.concurrent.*;
+import java.util.stream.Stream;
+
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 public class Server {
     private Collection<SingleClient> clientsList = Collections.synchronizedList(new ArrayList<SingleClient>());
-    private ExecutorService listenersPool = Executors.newCachedThreadPool();
+    private ExecutorService listenersPool = Executors.newFixedThreadPool(5_000);
 
     /** thread-safe: http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/BlockingQueue.html */
     private BlockingQueue<String> messagesQueue = new LinkedBlockingQueue<>();
@@ -23,7 +28,9 @@ public class Server {
     }
 
     public void addClient(SingleClient client) {
-        this.clientsList.add(client);
+        synchronized (clientsList) {
+            this.clientsList.add(client);
+        }
         this.listenersPool.execute(new MessageListener(client));
     }
 
@@ -48,8 +55,10 @@ public class Server {
                     e.printStackTrace();
                 }
                 for (SingleClient client : clientsList) {
-                    if (!client.getSocket().isConnected()) {
-                        clientsList.remove(client);
+                    synchronized (clientsList) {
+                        if (!client.getSocket().isConnected()) {
+                            clientsList.remove(client);
+                        }
                     }
                 }
             }
@@ -59,10 +68,6 @@ public class Server {
     public static void main(String[] args) {
         new Server().mainLoop();
     }
-
-
-
-
 }
 
 class NewClientAcceptor implements Runnable {
@@ -101,9 +106,10 @@ class NewClientAcceptor implements Runnable {
  */
 class MessagesProcessor implements Runnable {
     private String historyFile = "history.txt";
-    private StringBuilder history = new StringBuilder("");
+    private Queue<String> history = new CircularFifoQueue<String>(50);
     private BlockingQueue<String> messagesQueue;
     private Collection<SingleClient> clientsList;
+    private ExecutorService writingPool = Executors.newFixedThreadPool(5_000);
 
     public MessagesProcessor(BlockingQueue<String> messagesQueue, Collection<SingleClient> clientsList) {
         this.messagesQueue = messagesQueue;
@@ -142,9 +148,11 @@ class MessagesProcessor implements Runnable {
                                 e.printStackTrace();
                             }
                         }).start();
-                        history.append(message + System.lineSeparator());
+                        history.add(message + System.lineSeparator());
                         for (SingleClient client : clientsList) {
-                            new Thread(() -> client.send(message)).start();
+                            synchronized (client) {
+                                writingPool.execute(() -> client.send(message));
+                            }
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -157,12 +165,19 @@ class MessagesProcessor implements Runnable {
         }
     }
     public String getHistory() {
-        return history.toString();
+        StringBuffer hist = new StringBuffer("");
+        for (String s: this.history) {
+            hist.append(s + System.lineSeparator());
+        }
+        return hist.toString();
     }
     private void restoreHistFromFile() {
-        try (FileInputStream fisTargetFile = new FileInputStream(new File(this.historyFile));) {
-            String targetFileStr = IOUtils.toString(fisTargetFile, "UTF-8");
-            this.history = new StringBuilder(targetFileStr);
+//        try (FileInputStream fisTargetFile = new FileInputStream(new File(this.historyFile));) {
+//            String targetFileStr = IOUtils.toString(fisTargetFile, "UTF-8");
+//            this.history = new StringBuilder(targetFileStr);
+//
+        try (Stream<String> stream = Files.lines(Paths.get(this.historyFile))) {
+            stream.forEach((x) -> history.add(x));
         } catch (FileNotFoundException e) {
             System.out.println("History will not be overloaded, no history file.");
             e.printStackTrace();

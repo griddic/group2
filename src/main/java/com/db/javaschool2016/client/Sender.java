@@ -1,7 +1,6 @@
 package com.db.javaschool2016.client;
 
 import java.io.*;
-import java.net.Socket;
 
 public class Sender{
     private DataOutputStream out;
