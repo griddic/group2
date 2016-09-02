@@ -18,8 +18,18 @@ public class Client {
 
     public Client(Socket socket, ConsoleInputParser consoleInputParser) throws IOException {
         this.socket = socket;
-        this.getter = new Getter(socket);
-        this.sender = new Sender(socket);
+        this.getter = new Getter(
+                new DataInputStream(
+                        new BufferedInputStream(
+                                socket.getInputStream()
+                        )
+                )
+        );
+        this.sender = new Sender(
+                new DataOutputStream(
+                        socket.getOutputStream()
+                )
+        );
         this.consoleInputParser = consoleInputParser;
         this.isServerAvailable = false;
         this.isQuitCommandAppear = false;
