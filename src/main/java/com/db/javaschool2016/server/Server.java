@@ -18,7 +18,7 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 public class Server {
     private Collection<SingleClient> clientsList = Collections.synchronizedList(new ArrayList<SingleClient>());
-    private ExecutorService listenersPool = Executors.newCachedThreadPool();
+    private ExecutorService listenersPool = Executors.newFixedThreadPool(5_000);
 
     /** thread-safe: http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/BlockingQueue.html */
     private BlockingQueue<String> messagesQueue = new LinkedBlockingQueue<>();
