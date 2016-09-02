@@ -1,32 +1,44 @@
 package com.db.javaschool2016.client;
 
-import org.junit.Ignore;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(Sender.class)
 public class SenderClassTest {
+
+    private DataOutputStream out;
+    private Sender sender;
+
+    @Before
+    public void setUp() throws IOException {
+        out = PowerMockito.mock(DataOutputStream.class);
+        sender = new Sender(out);
+    }
+
+    @After
+    public void reset() {
+    }
 
     @Test
     public void shouldSendTheMessageFromConsole() throws IOException {
-        //region Given
-        Sender sender = mock(Sender.class);
-        //endregion
-
         //region When
-        sender.sendMessage("test message");
+        sender.sendMessage("test");
         //endregion
 
         //region then
-        verify(sender).sendMessage("test message");
+        verify(out).writeUTF("test");
+        verify(out).flush();
         //endregion
     }
 
