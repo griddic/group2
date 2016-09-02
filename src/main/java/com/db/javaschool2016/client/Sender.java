@@ -20,6 +20,10 @@ public class Sender{
             out.flush();
     }
 
+    /**
+     * Try to close resource.
+     * @throws IOException
+     */
     public void close() throws IOException {
         out.close();
     }

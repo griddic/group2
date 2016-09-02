@@ -16,6 +16,12 @@ public class Client {
     private volatile boolean isServerAvailable;
     private volatile boolean isQuitCommandAppear;
 
+    /**
+     * Create client: try to open socket and create getter and setter with input and output stream l
+     * @param socket
+     * @param consoleInputParser
+     * @throws IOException
+     */
     public Client(Socket socket, ConsoleInputParser consoleInputParser) throws IOException {
         this.socket = socket;
         this.getter = new Getter(
@@ -51,8 +57,11 @@ public class Client {
         isServerAvailable = serverAvailable;
     }
 
-
-
+    /**
+     * Creates 2 threads:
+     * first thread listen console and send to server saved message,
+     * second thread listen socket and write in console input message.
+     */
     public void process () {
         consoleListenerAndSender.execute(() -> {
             String message = null;
@@ -103,6 +112,9 @@ public class Client {
         });
     }
 
+    /**
+     * Try to close all resources.
+     */
     public void close()  {
         this.consoleListenerAndSender.shutdownNow();
         this.serverListenerAndConsoleWriter.shutdownNow();

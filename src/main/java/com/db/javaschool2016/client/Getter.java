@@ -18,6 +18,10 @@ public class Getter{
             return in.readUTF();
     }
 
+    /**
+     * Try to close resource.
+     * @throws IOException
+     */
     public void close() throws IOException {
         in.close();
     }
