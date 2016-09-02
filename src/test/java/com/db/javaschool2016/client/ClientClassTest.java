@@ -1,20 +1,30 @@
 package com.db.javaschool2016.client;
 
-import com.db.javaschool2016.server.Server;
-import org.junit.Ignore;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.Socket;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ClientClassTest {
+    private ByteArrayOutputStream OUT = new ByteArrayOutputStream();
 
+    @Before
+    public void setUpOut() {
+        OUT.reset();
+        System.setOut(new PrintStream(OUT));
+    }
+
+    @After
+    public void resetOut() {
+        OUT.reset();
+    }
     @Test
     public void shouldReturnTrueWhenCommandQuitSent() throws IOException {
         //region Given
@@ -39,14 +49,14 @@ public class ClientClassTest {
         ConsoleInputParser consoleInputParser = mock(ConsoleInputParser.class);
         Socket socket = mock(Socket.class);
         Client client = new Client(socket, consoleInputParser);
-        client.setServerAvailable(true);
         //endregion
 
         //region When
-        boolean result = client.isServerAvailable();
+        client.setServerAvailable(true);
         //endregion
 
         //region Then
+        boolean result = client.isServerAvailable();
         assertThat(result).isEqualTo(true);
         //endregion
     }
