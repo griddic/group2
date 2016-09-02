@@ -18,7 +18,8 @@ public class ConsoleListener {
         while (true) {
             if (reader.ready()) {
                 message = consoleInputParser.parseString(reader.readLine());
-                dataOutputStream.writeUTF(message);
+                if (message != null)
+                    dataOutputStream.writeUTF(message);
                 if (Objects.equals(message, "/quit")) {
                     System.exit(0);
                 }
