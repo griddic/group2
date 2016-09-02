@@ -17,10 +17,9 @@ public class SingleClient {
 
     private final Socket socket;
     private final Server server;
-    //private final ExecutorService listenersPool;
 
 
-    public SingleClient(Socket socket, Server server) {//} ExecutorService listenersPool, BlockingQueue<String> queue) {
+    public SingleClient(Socket socket, Server server) {
         this.socket = socket;
         this.server = server;
     }
@@ -41,7 +40,6 @@ public class SingleClient {
 }
 
 class MessageListener implements Runnable{
-    //private BlockingQueue<String> queue;
     private SingleClient client;
 
     public MessageListener(SingleClient client) {
@@ -49,7 +47,6 @@ class MessageListener implements Runnable{
     }
     @Override
     public void run() {
-        //DataInputStream inputStream;
         try (DataInputStream inputStream =
                      new DataInputStream(
                              new BufferedInputStream(
