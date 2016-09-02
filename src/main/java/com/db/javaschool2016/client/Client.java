@@ -108,7 +108,7 @@ public class Client {
 
         Client client = null;
         try {
-            client = new Client(new Socket("localhost", 1234),new ConsoleInputParser());
+            client = new Client(new ConsoleInputParser());
         } catch (IOException e) {
             System.out.println("[SERVER ISSUE] server isn't reachable.");
             System.exit(0);
