@@ -14,18 +14,31 @@ public class ConsoleInputParser {
      * @return processed string.
      */
     public String parseString(String inString) {
-        Pattern p = Pattern.compile("^/(\\w+)(.*)$");
+        Pattern p = Pattern.compile("^(/\\w+)(\\s[^/]*)?$");
         Matcher m = p.matcher(inString);
+        String command;
+        String message;
         if(m.matches()) {
-            switch (m.group(1)) {
-                case "snd":
-                    return m.group(2);
+            command = m.group(1);
+            message = m.group(2);
+            switch (command) {
+                case "/snd":
+                    if (message != null && message.length() > 1 && message.length() <= 151) {
+                        return message;
+                    }
+                    else {
+                        System.out.println("[WRONG INPUT] message shouldn't be empty and more than 150 characters");
+                    }
+                    break;
+                case "/quit":
+                    return command;
                 default:
                     System.out.println("[WRONG COMMAND] Inapplicable command.");
+                    break;
             }
         }
         else {
-            System.out.println("[WRONG INPUT] Your command contains a mistake." + System.lineSeparator() +
+            System.out.println("[WRONG INPUT] Your message shouldn't begin with slash." + System.lineSeparator() +
                             "[WRONG INPUT] Your message should be separated from command with space.");
         }
         return null;

@@ -2,6 +2,7 @@ package com.db.javaschool2016.client;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -12,7 +13,24 @@ public class Client {
     private ConsoleInputParser consoleInputParser;
     private ExecutorService consoleListenerAndSender = Executors.newSingleThreadExecutor();
     private ExecutorService serverListenerAndConsoleWriter = Executors.newSingleThreadExecutor();
-    private boolean status;
+    private volatile boolean isServerAvailable;
+    private volatile boolean isQuitCommandAppear;
+
+    public boolean isQuitCommandAppear() {
+        return isQuitCommandAppear;
+    }
+
+    public void setQuitCommandAppear(boolean quitCommandAppear) {
+        isQuitCommandAppear = quitCommandAppear;
+    }
+
+    public boolean isServerAvailable() {
+        return isServerAvailable;
+    }
+
+    public void setServerAvailable(boolean serverAvailable) {
+        isServerAvailable = serverAvailable;
+    }
 
 
     public Client(ConsoleInputParser consoleInputParser) throws IOException {
@@ -20,7 +38,8 @@ public class Client {
         this.getter = new Getter(socket);
         this.sender = new Sender(socket);
         this.consoleInputParser = consoleInputParser;
-        this.status = false;
+        this.isServerAvailable = false;
+        this.isQuitCommandAppear = false;
     }
 
     public void process () {
@@ -38,29 +57,39 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.status = true;
-    }
-
-    public boolean getStatus() {
-        return status;
     }
 
     private class ConsoleListenerAndSender implements Runnable {
 
         @Override
         public void run() {
+            String message = null;
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             try {
-                while (true) {
-                    String n = reader.readLine();
-                    String message = consoleInputParser.parseString(n);
-                    if(message != null) {
-                        sender.sendMessage(message);
+                while (!isServerAvailable()) {
+                    if (reader.ready()) {
+                        message = consoleInputParser.parseString(
+                                reader.readLine()
+                        );
                     }
+
+                    if(message == null) {
+                        continue;
+                    }
+
+                    if (Objects.equals(message, "/quit")){
+                        close();
+                        setQuitCommandAppear(true);
+                        break;
+                    }
+
+                    sender.sendMessage(message);
+                    message = null;
+
                 }
+                reader.close();
             } catch (IOException e) {
-                System.out.println("server is down");
-                close();
+                e.printStackTrace();
             }
         }
     }
@@ -70,12 +99,18 @@ public class Client {
         @Override
         public void run() {
             try {
-                while (true) {
+                while (!isServerAvailable()) {
                     System.out.println(getter.getInputMessage());
                 }
             } catch (IOException e) {
-                System.out.println("server is down");
-                close();
+                if (!isQuitCommandAppear()) {
+                    System.out.println("[SERVER ISSUE] server is down.");
+                    close();
+                    setServerAvailable(true);
+                }
+                else {
+                    System.out.println("Quit...");
+                }
             }
         }
     }
@@ -86,16 +121,11 @@ public class Client {
         try {
             client = new Client(new ConsoleInputParser());
         } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
+            System.out.println("[SERVER ISSUE] server isn't reachable.");
+            System.exit(0);
         }
 
         client.process();
 
-        while (true) {
-            if (client.getStatus()) {
-                System.exit(0);
-            }
-        }
     }
 }
