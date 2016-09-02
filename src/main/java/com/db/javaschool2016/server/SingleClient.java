@@ -9,14 +9,22 @@ import java.util.concurrent.ExecutorService;
  * Created by Java_5 on 01.09.2016.
  */
 public class SingleClient {
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
     private final Socket socket;
-    private final ExecutorService listenersPool;
+    private final Server server;
+    //private final ExecutorService listenersPool;
 
 
-    public SingleClient(Socket socket, ExecutorService listenersPool, BlockingQueue<String> queue) {
+    public SingleClient(Socket socket, Server server) {//} ExecutorService listenersPool, BlockingQueue<String> queue) {
         this.socket = socket;
-        this.listenersPool = listenersPool;
-        listenersPool.execute(new MessageListener(queue));
+        this.server = server;
     }
 
     public void send(String message) {
@@ -25,37 +33,46 @@ public class SingleClient {
             DataOutputStream out = new DataOutputStream(
                             socket.getOutputStream());
             out.writeUTF(message);
+            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    class MessageListener implements Runnable{
-        private BlockingQueue<String> queue;
 
-        public MessageListener(BlockingQueue<String> queue) {
-            this.queue = queue;
-        }
-        @Override
-        public void run() {
-            //DataInputStream inputStream;
-            try (DataInputStream inputStream =
-                        new DataInputStream(
-                        new BufferedInputStream(
-                        socket.getInputStream())))
-            {
+}
 
-                while (!Thread.interrupted()) {
-                    if (!socket.isConnected()) return;
-                    String message = inputStream.readUTF();
-                    System.out.println(message);
-                    queue.put(Formatter.format(message));
+class MessageListener implements Runnable{
+    //private BlockingQueue<String> queue;
+    private SingleClient client;
+
+    public MessageListener(SingleClient client) {
+        this.client = client;
+    }
+    @Override
+    public void run() {
+        //DataInputStream inputStream;
+        try (DataInputStream inputStream =
+                     new DataInputStream(
+                             new BufferedInputStream(
+                                     client.getSocket().getInputStream())))
+        {
+
+            while (!Thread.interrupted()) {
+                if (!client.getSocket().isConnected()) return;
+                String message = inputStream.readUTF();
+                System.out.println(message);
+                if (message.startsWith("/hist")) {
+                    client.send(client.getServer().getMessagesProcessor().getHistory());
+                    return;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println(Formatter.format(message));
+                this.client.getServer().getMessagesQueue().put(Formatter.format(message));
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
