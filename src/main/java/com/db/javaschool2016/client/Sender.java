@@ -6,10 +6,8 @@ import java.net.Socket;
 public class Sender{
     private DataOutputStream out;
 
-    public Sender(Socket socket) throws IOException{
-            this.out = new DataOutputStream(
-                            socket.getOutputStream()
-            );
+    public Sender(DataOutputStream dataOutputStream) throws IOException{
+            this.out = dataOutputStream;
     }
 
     /**

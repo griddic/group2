@@ -1,19 +1,13 @@
 package com.db.javaschool2016.client;
 
-import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.net.Socket;
 
 public class Getter{
     private DataInputStream in;
 
-    public Getter(Socket socket) throws IOException {
-            this.in = new DataInputStream(
-                    new BufferedInputStream(
-                            socket.getInputStream()
-                    )
-            );
+    public Getter(DataInputStream dataInputStream) throws IOException {
+            this.in = dataInputStream;
     }
 
     /**
