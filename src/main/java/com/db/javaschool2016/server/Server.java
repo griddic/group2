@@ -39,6 +39,21 @@ public class Server {
 
         ExecutorService messagesProcessing = Executors.newSingleThreadExecutor();
         messagesProcessing.execute(this.messagesProcessor);
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(5_000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                for (SingleClient client : clientsList) {
+                    if (!client.getSocket().isConnected()) {
+                        clientsList.remove(client);
+                    }
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -157,3 +172,4 @@ class MessagesProcessor implements Runnable {
         }
     }
 }
+
