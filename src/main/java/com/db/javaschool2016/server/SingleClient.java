@@ -2,11 +2,9 @@ package com.db.javaschool2016.server;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
 
 /**
- * Created by Java_5 on 01.09.2016.
+ * Instance responsible communication with a single client
  */
 public class SingleClient {
     public Socket getSocket() {

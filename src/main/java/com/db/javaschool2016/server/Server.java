@@ -7,7 +7,6 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Queue;
 import java.util.concurrent.*;
 import org.apache.commons.io.IOUtils;
 
