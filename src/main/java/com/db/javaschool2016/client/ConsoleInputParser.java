@@ -30,6 +30,7 @@ public class ConsoleInputParser {
                         System.out.println("[WRONG INPUT] message shouldn't be empty and more than 150 characters");
                     }
                     break;
+                case "/hist":
                 case "/quit":
                     return command;
                 default:

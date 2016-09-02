@@ -43,26 +43,7 @@ public class Client {
     }
 
     public void process () {
-        consoleListenerAndSender.execute(new ConsoleListenerAndSender());
-        serverListenerAndConsoleWriter.execute(new ServerListenerAndConsoleWriter());
-    }
-
-    public void close()  {
-        this.consoleListenerAndSender.shutdownNow();
-        this.serverListenerAndConsoleWriter.shutdownNow();
-        try {
-            this.getter.close();
-            this.sender.close();
-            this.socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private class ConsoleListenerAndSender implements Runnable {
-
-        @Override
-        public void run() {
+        consoleListenerAndSender.execute(() -> {
             String message = null;
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             try {
@@ -91,13 +72,9 @@ public class Client {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-    }
+        });
 
-    private class ServerListenerAndConsoleWriter implements Runnable {
-
-        @Override
-        public void run() {
+        serverListenerAndConsoleWriter.execute(() -> {
             try {
                 while (!isServerAvailable()) {
                     System.out.println(getter.getInputMessage());
@@ -112,6 +89,18 @@ public class Client {
                     System.out.println("Quit...");
                 }
             }
+        });
+    }
+
+    public void close()  {
+        this.consoleListenerAndSender.shutdownNow();
+        this.serverListenerAndConsoleWriter.shutdownNow();
+        try {
+            this.getter.close();
+            this.sender.close();
+            this.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
