@@ -22,7 +22,9 @@ public class Server {
     }
 
     public void addClient(SingleClient client) {
-        this.clientsList.add(client);
+        synchronized (clientsList) {
+            this.clientsList.add(client);
+        }
         this.listenersPool.execute(new MessageListener(client));
     }
 
@@ -47,8 +49,10 @@ public class Server {
                     e.printStackTrace();
                 }
                 for (SingleClient client : clientsList) {
-                    if (!client.getSocket().isConnected()) {
-                        clientsList.remove(client);
+                    synchronized (clientsList) {
+                        if (!client.getSocket().isConnected()) {
+                            clientsList.remove(client);
+                        }
                     }
                 }
             }
