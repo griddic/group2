@@ -1,16 +1,18 @@
 package com.db.javaschool2016.client;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Client {
+    private ServerSocket serverSocket;
     private Socket socket;
+    private Socket console;
     private Sender sender;
     private Getter getter;
-    private ConsoleInputParser consoleInputParser;
     private ExecutorService consoleListenerAndSender = Executors.newSingleThreadExecutor();
     private ExecutorService serverListenerAndConsoleWriter = Executors.newSingleThreadExecutor();
     private volatile boolean isServerAvailable;
@@ -19,10 +21,10 @@ public class Client {
     /**
      * Create client: try to open socket and create getter and setter with input and output stream l
      * @param socket
-     * @param consoleInputParser
      * @throws IOException
      */
-    public Client(Socket socket, ConsoleInputParser consoleInputParser) throws IOException {
+    public Client(Socket socket, int port) throws IOException {
+        this.serverSocket = new ServerSocket(port);
         this.socket = socket;
         this.getter = new Getter(
                 new DataInputStream(
@@ -36,9 +38,24 @@ public class Client {
                         socket.getOutputStream()
                 )
         );
-        this.consoleInputParser = consoleInputParser;
         this.isServerAvailable = false;
         this.isQuitCommandAppear = false;
+    }
+
+    public ServerSocket getServerSocket() {
+        return serverSocket;
+    }
+
+    public void setServerSocket(ServerSocket serverSocket) {
+        this.serverSocket = serverSocket;
+    }
+
+    public Socket getConsole() {
+        return console;
+    }
+
+    public void setConsole(Socket console) {
+        this.console = console;
     }
 
     public boolean isQuitCommandAppear() {
@@ -65,18 +82,15 @@ public class Client {
     public void process () {
         consoleListenerAndSender.execute(() -> {
             String message = null;
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            DataInputStream reader = null;
+            try {
+                reader = new DataInputStream(new BufferedInputStream(console.getInputStream()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             try {
                 while (!isServerAvailable()) {
-                    if (reader.ready()) {
-                        message = consoleInputParser.parseString(
-                                reader.readLine()
-                        );
-                    }
-
-                    if(message == null) {
-                        continue;
-                    }
+                    message = reader.readUTF();
 
                     if (Objects.equals(message, "/quit")){
                         close();
@@ -131,10 +145,16 @@ public class Client {
 
         Client client = null;
         try {
-            client = new Client(new Socket("localhost", 1234), new ConsoleInputParser());
+            client = new Client(new Socket("localhost", 1234), Integer.parseInt(args[0]));
         } catch (IOException e) {
             System.out.println("[SERVER ISSUE] server isn't reachable.");
-            System.exit(0);
+            //System.exit(0);
+        }
+
+        try {
+                client.setConsole(client.getServerSocket().accept());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         client.process();
