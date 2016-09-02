@@ -12,10 +12,14 @@ import static org.fest.assertions.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 public class ConsoleInputParserClassTest {
-    private final String WRONG_COMMAND_ALLERT = "[WRONG COMMAND] Inapplicable command.";
-    private final String WRONG_INPUT_ALLERT = "[WRONG INPUT] Your command contains a mistake." + System.lineSeparator() +
+    private final String WRONG_COMMAND_ALERT = "[WRONG COMMAND] Inapplicable command.";
+    private final String WRONG_INPUT_ALERT = "[WRONG INPUT] Your message shouldn't begin with slash." + System.lineSeparator() +
             "[WRONG INPUT] Your message should be separated from command with space.";
+    private final String WRONG_MESSAGE_ALERT = "[WRONG INPUT] message shouldn't be empty and more than 150 characters";
+
     private ByteArrayOutputStream OUT = new ByteArrayOutputStream();
+
+    private ConsoleInputParser consoleInputParser;
 
     @Before
     public void setUpOut() {
@@ -31,7 +35,7 @@ public class ConsoleInputParserClassTest {
     @Test
     public void shouldPrintWrongCommandWhenCommandReceiveSent() {
         //region Given
-        ConsoleInputParser consoleInputParser = new ConsoleInputParser();
+        consoleInputParser = new ConsoleInputParser();
         //endregion
 
         //region When
@@ -39,7 +43,7 @@ public class ConsoleInputParserClassTest {
         //endregion
 
         //region Then
-        assertThat(OUT.toString()).contains(WRONG_COMMAND_ALLERT);
+        assertThat(OUT.toString()).contains(WRONG_COMMAND_ALERT);
         //endregion
     }
 
@@ -54,13 +58,14 @@ public class ConsoleInputParserClassTest {
         //endregion
 
         //region Then
-        assertThat(OUT.toString()).contains(WRONG_INPUT_ALLERT);
+        assertThat(OUT.toString()).contains(WRONG_INPUT_ALERT);
         //endregion
     }
 
+    @Test
     public void shouldReturnMessageWhenMessageWithCommandSent() {
         //region Given
-        ConsoleInputParser consoleInputParser = new ConsoleInputParser();
+        consoleInputParser = new ConsoleInputParser();
         //endregion
 
         //region When
@@ -71,4 +76,20 @@ public class ConsoleInputParserClassTest {
         assertThat(parsedString).contains("Hello!");
         //endregion
     }
+
+    @Test
+    public void shoultPrintWrongMessageAlertWhenEmptyMessageSent() {
+        //region Given
+        consoleInputParser = new ConsoleInputParser();
+        //endregion
+
+        //region When
+        String alert = consoleInputParser.parseString("/snd");
+        //endregion
+
+        //region Then
+        assertThat(OUT.toString()).contains(WRONG_MESSAGE_ALERT);
+        //endregion
+    }
+
 }
