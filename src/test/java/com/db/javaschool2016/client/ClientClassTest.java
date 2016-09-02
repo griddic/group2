@@ -21,10 +21,10 @@ public class ClientClassTest {
         ConsoleInputParser consoleInputParser = mock(ConsoleInputParser.class);
         Socket socket = mock(Socket.class);
         Client client = new Client(socket, consoleInputParser);
+        client.setQuitCommandAppear(true);
         //endregion
 
         //region When
-        client.setQuitCommandAppear(true);
         boolean result = client.isQuitCommandAppear();
         //endregion
 
@@ -39,10 +39,10 @@ public class ClientClassTest {
         ConsoleInputParser consoleInputParser = mock(ConsoleInputParser.class);
         Socket socket = mock(Socket.class);
         Client client = new Client(socket, consoleInputParser);
+        client.setServerAvailable(true);
         //endregion
 
         //region When
-        client.setServerAvailable(true);
         boolean result = client.isServerAvailable();
         //endregion
 
@@ -51,7 +51,6 @@ public class ClientClassTest {
         //endregion
     }
 
-    @Ignore
     @Test
     public void shouldCallTheProcessMethodFromClient() {
         //region Given
