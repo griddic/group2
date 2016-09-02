@@ -16,6 +16,15 @@ public class Client {
     private volatile boolean isServerAvailable;
     private volatile boolean isQuitCommandAppear;
 
+    public Client(ConsoleInputParser consoleInputParser) throws IOException {
+        socket = new Socket("localhost", 1234);
+        this.getter = new Getter(socket);
+        this.sender = new Sender(socket);
+        this.consoleInputParser = consoleInputParser;
+        this.isServerAvailable = false;
+        this.isQuitCommandAppear = false;
+    }
+
     public boolean isQuitCommandAppear() {
         return isQuitCommandAppear;
     }
@@ -33,14 +42,6 @@ public class Client {
     }
 
 
-    public Client(ConsoleInputParser consoleInputParser) throws IOException {
-        socket = new Socket("localhost", 1234);
-        this.getter = new Getter(socket);
-        this.sender = new Sender(socket);
-        this.consoleInputParser = consoleInputParser;
-        this.isServerAvailable = false;
-        this.isQuitCommandAppear = false;
-    }
 
     public void process () {
         consoleListenerAndSender.execute(() -> {

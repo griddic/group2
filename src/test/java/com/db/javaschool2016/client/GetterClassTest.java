@@ -41,8 +41,6 @@ public class GetterClassTest {
         //region Then
         assertThat(expected).contains("test message");
         //endregion
-
-
     }
 
 

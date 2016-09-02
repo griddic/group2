@@ -18,6 +18,7 @@ public class ConsoleInputParserClassTest {
     private final String WRONG_MESSAGE_ALERT = "[WRONG INPUT] message shouldn't be empty and more than 150 characters";
     private final String QUIT_COMMAND = "/quit";
     private final String SEND_COMMAND = "/snd ";
+    private final String HISTORY_COMMAND = "/hist";
 
     private ByteArrayOutputStream OUT = new ByteArrayOutputStream();
 
@@ -106,6 +107,21 @@ public class ConsoleInputParserClassTest {
 
         //region Then
         assertThat(expected).contains(QUIT_COMMAND);
+        //endregion
+    }
+
+    @Test
+    public void shouldReturnCommandStringWhenHistoryCommandSent() {
+        //region Given
+        consoleInputParser = new ConsoleInputParser();
+        //endregion
+
+        //region When
+        String expected = consoleInputParser.parseString(HISTORY_COMMAND);
+        //endregion
+
+        //region Then
+        assertThat(expected).contains(HISTORY_COMMAND);
         //endregion
     }
 
