@@ -64,7 +64,7 @@ class MessageListener implements Runnable{
                 System.out.println(message);
                 if (message.startsWith("/hist")) {
                     client.send(client.getServer().getMessagesProcessor().getHistory());
-                    return;
+                    continue;
                 }
                 System.out.println(Formatter.format(message));
                 this.client.getServer().getMessagesQueue().put(Formatter.format(message));
