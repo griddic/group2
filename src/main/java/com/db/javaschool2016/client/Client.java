@@ -33,8 +33,8 @@ public class Client {
     }
 
 
-    public Client(ConsoleInputParser consoleInputParser) throws IOException {
-        socket = new Socket("localhost", 1234);
+    public Client(Socket socket, ConsoleInputParser consoleInputParser) throws IOException {
+        this.socket = socket;
         this.getter = new Getter(socket);
         this.sender = new Sender(socket);
         this.consoleInputParser = consoleInputParser;
@@ -108,7 +108,7 @@ public class Client {
 
         Client client = null;
         try {
-            client = new Client(new ConsoleInputParser());
+            client = new Client(new Socket("localhost", 1234),new ConsoleInputParser());
         } catch (IOException e) {
             System.out.println("[SERVER ISSUE] server isn't reachable.");
             System.exit(0);
