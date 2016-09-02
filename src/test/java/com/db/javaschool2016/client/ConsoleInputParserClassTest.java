@@ -16,6 +16,8 @@ public class ConsoleInputParserClassTest {
     private final String WRONG_INPUT_ALERT = "[WRONG INPUT] Your message shouldn't begin with slash." + System.lineSeparator() +
             "[WRONG INPUT] Your message should be separated from command with space.";
     private final String WRONG_MESSAGE_ALERT = "[WRONG INPUT] message shouldn't be empty and more than 150 characters";
+    private final String QUIT_COMMAND = "/quit";
+    private final String SEND_COMMAND = "/snd ";
 
     private ByteArrayOutputStream OUT = new ByteArrayOutputStream();
 
@@ -69,7 +71,7 @@ public class ConsoleInputParserClassTest {
         //endregion
 
         //region When
-        String parsedString = consoleInputParser.parseString("/snd Hello!");
+        String parsedString = consoleInputParser.parseString(SEND_COMMAND + "Hello!");
         //endregion
 
         //region Then
@@ -78,17 +80,32 @@ public class ConsoleInputParserClassTest {
     }
 
     @Test
-    public void shoultPrintWrongMessageAlertWhenEmptyMessageSent() {
+    public void shouldPrintWrongMessageAlertWhenEmptyMessageSent() {
         //region Given
         consoleInputParser = new ConsoleInputParser();
         //endregion
 
         //region When
-        String alert = consoleInputParser.parseString("/snd");
+        consoleInputParser.parseString(SEND_COMMAND);
         //endregion
 
         //region Then
         assertThat(OUT.toString()).contains(WRONG_MESSAGE_ALERT);
+        //endregion
+    }
+
+    @Test
+    public void shouldReturnCommandStringWhenQuitCommandSent() {
+        //region Given
+        consoleInputParser = new ConsoleInputParser();
+        //endregion
+
+        //region When
+        String expected = consoleInputParser.parseString(QUIT_COMMAND);
+        //endregion
+
+        //region Then
+        assertThat(expected).contains(QUIT_COMMAND);
         //endregion
     }
 
