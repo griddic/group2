@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Objects;
 
 public class ConsoleListener {
 
@@ -13,9 +14,15 @@ public class ConsoleListener {
         DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         ConsoleInputParser consoleInputParser = new ConsoleInputParser();
+        String message;
         while (true) {
-            if (reader.ready())
-                dataOutputStream.writeUTF(consoleInputParser.parseString(reader.readLine()));
+            if (reader.ready()) {
+                message = consoleInputParser.parseString(reader.readLine());
+                dataOutputStream.writeUTF(message);
+                if (Objects.equals(message, "/quit")) {
+                    System.exit(0);
+                }
+            }
         }
     }
 }
