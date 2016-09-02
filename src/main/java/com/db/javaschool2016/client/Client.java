@@ -142,6 +142,7 @@ public class Client {
     }
 
     public static void main(String[] args) {
+        System.out.println("[Chat Window]");
 
         Client client = null;
         try {

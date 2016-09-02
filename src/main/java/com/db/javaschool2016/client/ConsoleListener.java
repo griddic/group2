@@ -10,6 +10,7 @@ import java.util.Objects;
 public class ConsoleListener {
 
     public static void main(String[] args) throws IOException {
+        System.out.println("[Input Window]");
         Socket socket = new Socket("localhost", Integer.parseInt(args[0]));
         DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
