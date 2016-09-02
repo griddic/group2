@@ -1,23 +1,26 @@
 package com.db.javaschool2016.client;
 
+import com.db.javaschool2016.server.Server;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 
 import java.io.IOException;
+import java.net.Socket;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ClientClassTest {
-
-
 
     @Test
     public void shouldReturnTrueWhenCommandQuitSent() throws IOException {
         //region Given
         ConsoleInputParser consoleInputParser = mock(ConsoleInputParser.class);
-        Client client = new Client(consoleInputParser);
+        Socket socket = mock(Socket.class);
+        Client client = new Client(socket, consoleInputParser);
         //endregion
 
         //region When
@@ -34,7 +37,8 @@ public class ClientClassTest {
     public void shouldReturnTrueWhenServerIsAvailable() throws IOException {
         //region Given
         ConsoleInputParser consoleInputParser = mock(ConsoleInputParser.class);
-        Client client = new Client(consoleInputParser);
+        Socket socket = mock(Socket.class);
+        Client client = new Client(socket, consoleInputParser);
         //endregion
 
         //region When

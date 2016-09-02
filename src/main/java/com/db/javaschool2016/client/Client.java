@@ -16,6 +16,15 @@ public class Client {
     private volatile boolean isServerAvailable;
     private volatile boolean isQuitCommandAppear;
 
+    public Client(Socket socket, ConsoleInputParser consoleInputParser) throws IOException {
+        this.socket = socket;
+        this.getter = new Getter(socket);
+        this.sender = new Sender(socket);
+        this.consoleInputParser = consoleInputParser;
+        this.isServerAvailable = false;
+        this.isQuitCommandAppear = false;
+    }
+
     public boolean isQuitCommandAppear() {
         return isQuitCommandAppear;
     }
@@ -33,14 +42,6 @@ public class Client {
     }
 
 
-    public Client(Socket socket, ConsoleInputParser consoleInputParser) throws IOException {
-        this.socket = socket;
-        this.getter = new Getter(socket);
-        this.sender = new Sender(socket);
-        this.consoleInputParser = consoleInputParser;
-        this.isServerAvailable = false;
-        this.isQuitCommandAppear = false;
-    }
 
     public void process () {
         consoleListenerAndSender.execute(() -> {
@@ -108,7 +109,7 @@ public class Client {
 
         Client client = null;
         try {
-            client = new Client(new ConsoleInputParser());
+            client = new Client(new Socket("localhost", 1234), new ConsoleInputParser());
         } catch (IOException e) {
             System.out.println("[SERVER ISSUE] server isn't reachable.");
             System.exit(0);
